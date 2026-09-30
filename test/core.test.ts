@@ -519,7 +519,9 @@ test('case-colliding repository paths are refused before a shared vault is place
 test('Windows-incompatible repository paths and nonempty destinations are refused', async (t) => {
   const f = fixture(t);
   const existingBlob = git(f.company.work, 'rev-parse', 'HEAD:Context/Services.md');
-  git(f.company.work, 'update-index', '--add', '--cacheinfo', `100644,${existingBlob},Context/bad:name.md`);
+  // Fixture setup only: admit an invalid NTFS path into the synthetic remote so
+  // the plugin's pre-check can prove it refuses the tree before checkout.
+  git(f.company.work, '-c', 'core.protectNTFS=false', 'update-index', '--add', '--cacheinfo', `100644,${existingBlob},Context/bad:name.md`);
   git(f.company.work, 'commit', '-m', 'Add Windows-incompatible path');
   git(f.company.work, 'push', 'origin', 'main');
   write(join(f.workspace, 'Shared/Teams/Sales/keep.md'), '# Existing local material\n');
