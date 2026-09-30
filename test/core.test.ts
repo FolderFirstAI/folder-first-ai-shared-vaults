@@ -67,6 +67,10 @@ function write(path: string, content: string): void {
   writeFileSync(path, content, 'utf8');
 }
 
+function readNormalizedText(path: string): string {
+  return readFileSync(path, 'utf8').replace(/\r\n/gu, '\n');
+}
+
 function makeRemote(root: string, name: string, files: Record<string, string>): RemoteFixture {
   const remote = join(root, 'origins', `${name}.git`);
   const work = join(root, 'stewards', name);
@@ -287,8 +291,8 @@ test('connect, update and no-op use exact folders without touching personal work
     ['connected', 'connected'],
     JSON.stringify(connected, null, 2),
   );
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Company/Context/Services.md'), 'utf8'), '# Services\nOriginal\n');
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Teams/Sales/CONTEXT.md'), 'utf8'), '# Sales context\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Company/Context/Services.md')), '# Services\nOriginal\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Teams/Sales/CONTEXT.md')), '# Sales context\n');
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 
   write(join(f.company.work, 'Context', 'Services.md'), '# Services\nApproved update\n');
@@ -300,7 +304,7 @@ test('connect, update and no-op use exact folders without touching personal work
   assert.equal(updated.sharedVaults[0]?.commit, incoming);
   assert.equal(updated.sharedVaults[1]?.action, 'unchanged');
   assert.equal(existsSync(join(f.workspace, 'Shared/Company/CONTEXT.md')), false);
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Company/Context/Services.md'), 'utf8'), '# Services\nApproved update\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Company/Context/Services.md')), '# Services\nApproved update\n');
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 
   const noOp = await refreshSharedVaults(f.workspace, deliveryOptions);
@@ -323,8 +327,8 @@ test('one Company and multiple assigned Teams land at their prepared paths', asy
   );
   const report = await connectSharedVaults(f.workspace, deliveryOptions);
   assert.deepEqual(report.sharedVaults.map((item) => item.action), ['connected', 'connected', 'connected']);
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Teams/Sales/CONTEXT.md'), 'utf8'), '# Sales context\n');
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Teams/Operations/CONTEXT.md'), 'utf8'), '# Operations context\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Teams/Sales/CONTEXT.md')), '# Sales context\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Teams/Operations/CONTEXT.md')), '# Operations context\n');
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 });
 
@@ -338,7 +342,7 @@ test('local shared edits stop that shared vault without overwriting it', async (
   const report = await refreshSharedVaults(f.workspace, deliveryOptions);
   assert.equal(report.sharedVaults[0]?.action, 'failed');
   assert.equal(report.sharedVaults[0]?.errorCode, 'local-changes');
-  assert.equal(readFileSync(employeeFile, 'utf8'), '# Services\nEmployee edit\n');
+  assert.equal(readNormalizedText(employeeFile), '# Services\nEmployee edit\n');
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 });
 
@@ -355,14 +359,14 @@ test('confirmed restore removes only accidental shared edits and a later refresh
   const restored = await restoreSharedVault(f.workspace, 'Shared/Company', deliveryOptions);
   assert.equal(restored.operation, 'restore');
   assert.equal(restored.sharedVaults[0]?.action, 'restored');
-  assert.equal(readFileSync(employeeFile, 'utf8'), '# Services\nOriginal\n');
+  assert.equal(readNormalizedText(employeeFile), '# Services\nOriginal\n');
   assert.equal(existsSync(untracked), false);
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 
   const refreshed = await refreshSharedVaults(f.workspace, deliveryOptions);
   assert.equal(refreshed.sharedVaults[0]?.action, 'updated');
   assert.equal(refreshed.sharedVaults[0]?.commit, incoming);
-  assert.equal(readFileSync(employeeFile, 'utf8'), '# Services\nApproved remote edit\n');
+  assert.equal(readNormalizedText(employeeFile), '# Services\nApproved remote edit\n');
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 });
 
@@ -422,7 +426,7 @@ test('one unavailable repository does not block another approved update', async 
   assert.equal(report.sharedVaults[0]?.errorCode, 'remote-unavailable');
   assert.equal(report.sharedVaults[1]?.action, 'updated');
   assert.equal(report.sharedVaults[1]?.commit, teamCommit);
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Company/Context/Services.md'), 'utf8'), '# Services\nOriginal\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Company/Context/Services.md')), '# Services\nOriginal\n');
   const serialized = JSON.stringify(report);
   assert.doesNotMatch(serialized, /file:\/\//u);
   assert.doesNotMatch(serialized, /Never change this personal note/u);
@@ -514,13 +518,15 @@ test('case-colliding repository paths are refused before a shared vault is place
 
 test('Windows-incompatible repository paths and nonempty destinations are refused', async (t) => {
   const f = fixture(t);
-  write(join(f.company.work, 'Context/bad:name.md'), '# Invalid on Windows\n');
-  commitAndPush(f.company, 'Add Windows-incompatible path');
+  const existingBlob = git(f.company.work, 'rev-parse', 'HEAD:Context/Services.md');
+  git(f.company.work, 'update-index', '--add', '--cacheinfo', `100644,${existingBlob},Context/bad:name.md`);
+  git(f.company.work, 'commit', '-m', 'Add Windows-incompatible path');
+  git(f.company.work, 'push', 'origin', 'main');
   write(join(f.workspace, 'Shared/Teams/Sales/keep.md'), '# Existing local material\n');
   const report = await connectSharedVaults(f.workspace, deliveryOptions);
   assert.equal(report.sharedVaults[0]?.errorCode, 'unsafe-repository-tree');
   assert.equal(report.sharedVaults[1]?.errorCode, 'destination-not-empty');
-  assert.equal(readFileSync(join(f.workspace, 'Shared/Teams/Sales/keep.md'), 'utf8'), '# Existing local material\n');
+  assert.equal(readNormalizedText(join(f.workspace, 'Shared/Teams/Sales/keep.md')), '# Existing local material\n');
   assert.equal(existsSync(join(f.workspace, 'Shared/Company')), false);
   assert.equal(hashPersonal(f.workspace), f.personalHash);
 });
