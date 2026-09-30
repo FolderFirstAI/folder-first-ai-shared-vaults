@@ -40,6 +40,8 @@ Shared Vaults:
 
 **Restore approved copy** is intentionally narrow. After confirmation, it removes uncommitted tracked and untracked non-ignored changes only inside one validated shared-vault receiving clone. It refuses local commits or divergent history. It does not update from GitHub; the employee selects **Refresh all** separately.
 
+Closing the Shared Vaults view or disabling the plugin cancels the active Git command and its helper processes. A partial staging folder is never treated as a connected receiving copy.
+
 Removing someone’s GitHub access prevents later authenticated checks but cannot erase files already downloaded to their computer. Client IT owns endpoint retention and offboarding.
 
 ## Network and system access disclosure

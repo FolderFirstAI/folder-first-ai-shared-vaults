@@ -14,6 +14,7 @@ import {
 import { dirname, isAbsolute, join, relative, resolve, sep, win32 } from 'node:path';
 import { clearTimeout as clearNodeTimeout, setTimeout as setNodeTimeout } from 'node:timers';
 import { parseDocument } from 'yaml';
+import { terminateProcessTree } from './process-tree.ts';
 
 const MAX_CONFIG_BYTES = 64 * 1024;
 const MAX_GIT_OUTPUT_BYTES = 256 * 1024;
@@ -482,6 +483,7 @@ async function runGit(arguments_: string[], options: GitOptions): Promise<string
     }
     const child = spawn(options.gitExecutable, [...prefix, ...arguments_], {
       cwd: options.cwd,
+      detached: process.platform !== 'win32',
       shell: false,
       windowsHide: true,
       // Browser-based credential managers may prompt only for a deliberate
@@ -496,17 +498,17 @@ async function runGit(arguments_: string[], options: GitOptions): Promise<string
       outputBytes += chunk.length;
       if (outputBytes > MAX_GIT_OUTPUT_BYTES) {
         exceeded = true;
-        child.kill();
+        terminateProcessTree(child);
         return;
       }
       if (retain) stdout += chunk.toString('utf8');
     };
     child.stdout.on('data', (chunk: Buffer) => { collect(chunk, true); });
     child.stderr.on('data', (chunk: Buffer) => { collect(chunk, false); });
-    const cancel = (): void => { child.kill(); };
+    const cancel = (): void => { terminateProcessTree(child); };
     options.signal?.addEventListener('abort', cancel, { once: true });
     const timer = setNodeTimeout(() => {
-      child.kill();
+      terminateProcessTree(child);
       reject(new DeliveryError('operation-timeout', 'Git did not finish within the allowed time.'));
     }, GIT_TIMEOUT_MS);
     child.on('error', () => {

@@ -7,6 +7,11 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 - Prepare the standalone public repository, license, release checks and Community-directory submission.
 - Complete current Mac/Windows behavior and plugin-update qualification.
 
+## 0.0.11 — 2026-09-30
+
+- Stop the active Git command and its helper processes when the Shared Vaults view closes, the plugin is disabled, output exceeds its safe limit or the operation times out.
+- Add a cross-platform regression test proving that process-tree cancellation stops a spawned descendant.
+
 ## 0.0.10 — 2026-09-30
 
 - Re-enable Connect and Refresh immediately after a successful confirmed Restore instead of leaving the view in its temporary busy state until reopened.

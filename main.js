@@ -7368,11 +7368,36 @@ module.exports = __toCommonJS(main_exports);
 var import_obsidian = require("obsidian");
 
 // src/core.ts
-var import_node_child_process = require("node:child_process");
+var import_node_child_process2 = require("node:child_process");
 var import_promises = require("node:fs/promises");
 var import_node_path = require("node:path");
 var import_node_timers = require("node:timers");
 var import_yaml = __toESM(require_dist(), 1);
+
+// src/process-tree.ts
+var import_node_child_process = require("node:child_process");
+function terminateProcessTree(child) {
+  const pid = child.pid;
+  if (!pid) return;
+  if (process.platform === "win32") {
+    const killer = (0, import_node_child_process.spawn)("taskkill.exe", ["/PID", String(pid), "/T", "/F"], {
+      shell: false,
+      windowsHide: true,
+      stdio: "ignore"
+    });
+    killer.once("error", () => {
+      child.kill();
+    });
+    return;
+  }
+  try {
+    process.kill(-pid, "SIGTERM");
+  } catch {
+    child.kill();
+  }
+}
+
+// src/core.ts
 var MAX_CONFIG_BYTES = 64 * 1024;
 var MAX_GIT_OUTPUT_BYTES = 256 * 1024;
 var GIT_TIMEOUT_MS = 12e4;
@@ -7682,8 +7707,9 @@ async function runGit(arguments_, options) {
       reject(new DeliveryError("operation-failed", "The shared-vault operation was canceled."));
       return;
     }
-    const child = (0, import_node_child_process.spawn)(options.gitExecutable, [...prefix, ...arguments_], {
+    const child = (0, import_node_child_process2.spawn)(options.gitExecutable, [...prefix, ...arguments_], {
       cwd: options.cwd,
+      detached: process.platform !== "win32",
       shell: false,
       windowsHide: true,
       // Browser-based credential managers may prompt only for a deliberate
@@ -7698,7 +7724,7 @@ async function runGit(arguments_, options) {
       outputBytes += chunk.length;
       if (outputBytes > MAX_GIT_OUTPUT_BYTES) {
         exceeded = true;
-        child.kill();
+        terminateProcessTree(child);
         return;
       }
       if (retain) stdout += chunk.toString("utf8");
@@ -7710,11 +7736,11 @@ async function runGit(arguments_, options) {
       collect(chunk, false);
     });
     const cancel = () => {
-      child.kill();
+      terminateProcessTree(child);
     };
     options.signal?.addEventListener("abort", cancel, { once: true });
     const timer = (0, import_node_timers.setTimeout)(() => {
-      child.kill();
+      terminateProcessTree(child);
       reject(new DeliveryError("operation-timeout", "Git did not finish within the allowed time."));
     }, GIT_TIMEOUT_MS);
     child.on("error", () => {
