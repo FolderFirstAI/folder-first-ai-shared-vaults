@@ -1,5 +1,5 @@
 ---
-id: practical-ai-os-shared-vaults-recovery
+id: folder-first-ai-shared-vaults-recovery
 type: guide
 status: release-candidate
 created: "2026-09-29"
@@ -8,7 +8,7 @@ summary: "Plain-language setup and confirmed local-change recovery for the Share
 ---
 # Shared Vaults: setup and recovery
 
-> **Pre-release source only.** This guide describes Shared Vaults `0.0.8`, the Community-release stabilization build after Practical AI OS `1.0.0-rc.5`. It is not yet production-approved or a substitute for client IT approval.
+> **Pre-release source only.** This guide describes Folder First AI Shared Vaults `0.0.12`. It is not yet production-approved or a substitute for client IT approval.
 
 ## What this view does
 
@@ -92,7 +92,7 @@ A one-device Windows test passed the candidate's bounded connection, exact place
 
 ## What the specialist checks
 
-- the workspace is the intended local Practical AI OS folder;
+- the workspace is the intended local Folder First AI Workspace folder;
 - its prepared `Shared/VAULTS.yaml` names only permitted Company/Team repositories and exact receiving paths;
 - Git Credential Manager uses the platform secure store, not plaintext/cache/no-store modes;
 - the employee's own GitHub account has the expected repository access;

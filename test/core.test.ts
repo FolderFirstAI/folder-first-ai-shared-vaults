@@ -79,7 +79,7 @@ function makeRemote(root: string, name: string, files: Record<string, string>): 
   git(undefined, 'init', '--bare', '-b', 'main', remote);
   git(work, 'init', '-b', 'main');
   git(work, 'config', 'user.email', 'test@example.invalid');
-  git(work, 'config', 'user.name', 'Practical AI OS test');
+  git(work, 'config', 'user.name', 'Folder First AI test');
   for (const [path, content] of Object.entries(files)) write(join(work, path), content);
   git(work, 'add', '--all');
   git(work, 'commit', '-m', 'Initial approved content');
@@ -123,7 +123,7 @@ function hashPersonal(workspace: string): string {
 }
 
 function fixture(t: test.TestContext): Fixture {
-  const root = mkdtempSync(join(tmpdir(), 'practical-ai-os-plugin-'));
+  const root = mkdtempSync(join(tmpdir(), 'folder-first-ai-plugin-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const company = makeRemote(root, 'company', {
     'CONTEXT.md': '# Company context\n',
@@ -133,9 +133,9 @@ function fixture(t: test.TestContext): Fixture {
     'CONTEXT.md': '# Sales context\n',
     'Workflows/Proposal/CONTEXT.md': '# Proposal workflow\n',
   });
-  const workspace = join(root, 'Practical AI OS');
+  const workspace = join(root, 'Folder First AI Workspace');
   write(join(workspace, 'START-HERE.md'), '# Start here\n');
-  write(join(workspace, 'SYSTEM-MANIFEST.yaml'), 'product: Practical AI OS\n');
+  write(join(workspace, 'SYSTEM-MANIFEST.yaml'), 'product: Folder First AI Workspace\n');
   write(join(workspace, 'Shared', 'VAULTS.yaml'), enrollment(company, [{ name: 'Sales', slug: 'Sales', remote: team }]));
   write(join(workspace, 'My Work', 'private-note.md'), 'Never change this personal note.\n');
   return { root, workspace, company, team, personalHash: hashPersonal(workspace) };
