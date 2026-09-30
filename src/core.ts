@@ -12,6 +12,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep, win32 } from 'node:path';
+import { clearTimeout as clearNodeTimeout, setTimeout as setNodeTimeout } from 'node:timers';
 import { parseDocument } from 'yaml';
 
 const MAX_CONFIG_BYTES = 64 * 1024;
@@ -485,16 +486,16 @@ async function runGit(arguments_: string[], options: GitOptions): Promise<string
     child.stderr.on('data', (chunk: Buffer) => { collect(chunk, false); });
     const cancel = (): void => { child.kill(); };
     options.signal?.addEventListener('abort', cancel, { once: true });
-    const timer = setTimeout(() => {
+    const timer = setNodeTimeout(() => {
       child.kill();
       reject(new DeliveryError('operation-timeout', 'Git did not finish within the allowed time.'));
     }, GIT_TIMEOUT_MS);
     child.on('error', () => {
-      clearTimeout(timer);
+      clearNodeTimeout(timer);
       reject(new DeliveryError('git-unavailable', 'System Git is unavailable. Ask the implementer or IT for help.'));
     });
     child.on('close', (code) => {
-      clearTimeout(timer);
+      clearNodeTimeout(timer);
       options.signal?.removeEventListener('abort', cancel);
       if (exceeded) {
         reject(new DeliveryError('operation-failed', 'Git returned more diagnostic output than the plugin permits.'));

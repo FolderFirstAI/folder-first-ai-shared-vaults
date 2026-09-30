@@ -9,6 +9,8 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 
 ## 0.0.8 — 2026-09-30
 
+- Add the official Obsidian ESLint rules to local and hosted validation; resolve every reported source error and warning.
+- Preserve the employee's chosen Shared Vaults pane location when the plugin is disabled or updated.
 - Neutralize repository protocols, hooks, global attributes, file-monitor commands and untracked-cache behavior for plugin Git operations.
 - Refuse receiving repositories above 25,000 files, any file above 100 MiB, or more than 1 GiB of directly versioned files before checkout.
 - Build against the qualified public Obsidian Desktop 1.13.7 support floor and pin CI actions by commit.

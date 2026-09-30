@@ -60,6 +60,7 @@ Development requires Node.js 22.6 or newer. Employees do not need Node.js.
 
 ```sh
 npm ci
+npm run lint
 npm test
 npm run build
 ```

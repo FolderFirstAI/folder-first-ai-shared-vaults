@@ -176,21 +176,21 @@ class SharedVaultsView extends ItemView {
   private renderStatus(parent: HTMLElement, status: LocalSharedVaultStatus): void {
     const row = parent.createDiv({ cls: 'practical-ai-os-shared-vaults__row' });
     row.createEl('strong', { text: `${status.name} — ${status.state.replace('-', ' ')}` });
-    row.createEl('div', {
+    row.createDiv({
       cls: status.state === 'needs-attention'
         ? 'practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention'
         : 'practical-ai-os-shared-vaults__detail',
       text: `${status.localPath}: ${status.message}${status.commit ? ` (${shortCommit(status.commit)})` : ''}`,
     });
     const recovery = recoveryGuidance(status.errorCode);
-    if (recovery) row.createEl('div', { cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
+    if (recovery) row.createDiv({ cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
     if (status.errorCode === 'local-changes') this.renderRestoreButton(row, status);
     const saved = this.plugin.lastState(status.localPath);
     if (saved) {
       const success = saved.lastSuccessfulAt
         ? ` Last successful check: ${new Date(saved.lastSuccessfulAt).toLocaleString()}${saved.commit ? ` at ${shortCommit(saved.commit)}` : ''}.`
         : ' No successful remote check is recorded yet.';
-      row.createEl('div', {
+      row.createDiv({
         cls: 'practical-ai-os-shared-vaults__detail',
         text: `Last attempt: ${new Date(saved.lastAttemptAt).toLocaleString()} (${saved.lastAction}).${success}`,
       });
@@ -200,14 +200,14 @@ class SharedVaultsView extends ItemView {
   private renderResult(parent: HTMLElement, result: SharedVaultResult): void {
     const row = parent.createDiv({ cls: 'practical-ai-os-shared-vaults__row' });
     row.createEl('strong', { text: `${result.name} — ${result.action.replace('-', ' ')}` });
-    row.createEl('div', {
+    row.createDiv({
       cls: result.action === 'failed'
         ? 'practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention'
         : 'practical-ai-os-shared-vaults__detail',
       text: `${result.localPath}: ${resultSummary(result)}`,
     });
     const recovery = recoveryGuidance(result.errorCode);
-    if (recovery) row.createEl('div', { cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
+    if (recovery) row.createDiv({ cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
     if (result.errorCode === 'local-changes') {
       this.renderRestoreButton(row, { role: result.role, name: result.name, localPath: result.localPath, state: 'needs-attention', errorCode: result.errorCode, message: result.message });
     }
@@ -303,7 +303,6 @@ export default class SharedVaultsPlugin extends Plugin {
 
   override onunload(): void {
     this.cancelOperations();
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE);
   }
 
   startOperation(): AbortController | undefined {

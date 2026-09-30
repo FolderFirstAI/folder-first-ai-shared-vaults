@@ -7371,6 +7371,7 @@ var import_obsidian = require("obsidian");
 var import_node_child_process = require("node:child_process");
 var import_promises = require("node:fs/promises");
 var import_node_path = require("node:path");
+var import_node_timers = require("node:timers");
 var import_yaml = __toESM(require_dist(), 1);
 var MAX_CONFIG_BYTES = 64 * 1024;
 var MAX_GIT_OUTPUT_BYTES = 256 * 1024;
@@ -7698,16 +7699,16 @@ async function runGit(arguments_, options) {
       child.kill();
     };
     options.signal?.addEventListener("abort", cancel, { once: true });
-    const timer = setTimeout(() => {
+    const timer = (0, import_node_timers.setTimeout)(() => {
       child.kill();
       reject(new DeliveryError("operation-timeout", "Git did not finish within the allowed time."));
     }, GIT_TIMEOUT_MS);
     child.on("error", () => {
-      clearTimeout(timer);
+      (0, import_node_timers.clearTimeout)(timer);
       reject(new DeliveryError("git-unavailable", "System Git is unavailable. Ask the implementer or IT for help."));
     });
     child.on("close", (code) => {
-      clearTimeout(timer);
+      (0, import_node_timers.clearTimeout)(timer);
       options.signal?.removeEventListener("abort", cancel);
       if (exceeded) {
         reject(new DeliveryError("operation-failed", "Git returned more diagnostic output than the plugin permits."));
@@ -8377,17 +8378,17 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
   renderStatus(parent, status) {
     const row = parent.createDiv({ cls: "practical-ai-os-shared-vaults__row" });
     row.createEl("strong", { text: `${status.name} \u2014 ${status.state.replace("-", " ")}` });
-    row.createEl("div", {
+    row.createDiv({
       cls: status.state === "needs-attention" ? "practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention" : "practical-ai-os-shared-vaults__detail",
       text: `${status.localPath}: ${status.message}${status.commit ? ` (${shortCommit(status.commit)})` : ""}`
     });
     const recovery = recoveryGuidance(status.errorCode);
-    if (recovery) row.createEl("div", { cls: "practical-ai-os-shared-vaults__detail", text: recovery });
+    if (recovery) row.createDiv({ cls: "practical-ai-os-shared-vaults__detail", text: recovery });
     if (status.errorCode === "local-changes") this.renderRestoreButton(row, status);
     const saved = this.plugin.lastState(status.localPath);
     if (saved) {
       const success = saved.lastSuccessfulAt ? ` Last successful check: ${new Date(saved.lastSuccessfulAt).toLocaleString()}${saved.commit ? ` at ${shortCommit(saved.commit)}` : ""}.` : " No successful remote check is recorded yet.";
-      row.createEl("div", {
+      row.createDiv({
         cls: "practical-ai-os-shared-vaults__detail",
         text: `Last attempt: ${new Date(saved.lastAttemptAt).toLocaleString()} (${saved.lastAction}).${success}`
       });
@@ -8396,12 +8397,12 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
   renderResult(parent, result) {
     const row = parent.createDiv({ cls: "practical-ai-os-shared-vaults__row" });
     row.createEl("strong", { text: `${result.name} \u2014 ${result.action.replace("-", " ")}` });
-    row.createEl("div", {
+    row.createDiv({
       cls: result.action === "failed" ? "practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention" : "practical-ai-os-shared-vaults__detail",
       text: `${result.localPath}: ${resultSummary(result)}`
     });
     const recovery = recoveryGuidance(result.errorCode);
-    if (recovery) row.createEl("div", { cls: "practical-ai-os-shared-vaults__detail", text: recovery });
+    if (recovery) row.createDiv({ cls: "practical-ai-os-shared-vaults__detail", text: recovery });
     if (result.errorCode === "local-changes") {
       this.renderRestoreButton(row, { role: result.role, name: result.name, localPath: result.localPath, state: "needs-attention", errorCode: result.errorCode, message: result.message });
     }
@@ -8493,7 +8494,6 @@ var SharedVaultsPlugin = class extends import_obsidian.Plugin {
   }
   onunload() {
     this.cancelOperations();
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE);
   }
   startOperation() {
     return this.operations.start();
