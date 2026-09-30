@@ -18,7 +18,7 @@ The implementation specialist prepares `Shared/VAULTS.yaml`. Employees do not en
 
 - Obsidian desktop on macOS or Windows. Mobile is not supported.
 - A recognized Practical AI OS workspace.
-- System Git and Git Credential Manager installed and configured by the employee, implementation specialist or IT team.
+- System Git and Git Credential Manager installed and configured by the employee, implementation specialist or IT team. On macOS, use GCM's official package/Homebrew installation or an already approved GitHub Desktop GCM configuration; on Windows, use the normal Git for Windows installation.
 - A GitHub account with access to every repository assigned in `Shared/VAULTS.yaml`.
 - Network and browser authentication access permitted by the organization.
 

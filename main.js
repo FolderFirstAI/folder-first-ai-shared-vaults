@@ -7626,6 +7626,20 @@ function isSupportedCredentialHelper(value) {
   if (quote === "'" || quote === '"') {
     if (!command.endsWith(quote) || command.length < 3) return false;
     command = command.slice(1, -1);
+  } else if (command.startsWith("/")) {
+    let path = "";
+    for (let index = 0; index < command.length; index += 1) {
+      const character = command.charAt(index);
+      if (character === "\\") {
+        if (command[index + 1] !== " ") return false;
+        path += " ";
+        index += 1;
+      } else {
+        if (/\s/u.test(character)) return false;
+        path += character;
+      }
+    }
+    command = path;
   } else if (/\s/u.test(command)) {
     return false;
   }

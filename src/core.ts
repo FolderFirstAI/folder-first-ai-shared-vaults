@@ -415,6 +415,25 @@ export function isSupportedCredentialHelper(value: string): boolean {
   if (quote === "'" || quote === '"') {
     if (!command.endsWith(quote) || command.length < 3) return false;
     command = command.slice(1, -1);
+  } else if (command.startsWith('/')) {
+    // `git-credential-manager configure` writes GitHub Desktop's normal
+    // macOS helper path with shell-escaped spaces (for example,
+    // `/Applications/GitHub\\ Desktop.app/...`). Decode only that one safe
+    // escape form. Reject unescaped whitespace and every other backslash
+    // sequence rather than treating this as a general shell command.
+    let path = '';
+    for (let index = 0; index < command.length; index += 1) {
+      const character = command.charAt(index);
+      if (character === '\\') {
+        if (command[index + 1] !== ' ') return false;
+        path += ' ';
+        index += 1;
+      } else {
+        if (/\s/u.test(character)) return false;
+        path += character;
+      }
+    }
+    command = path;
   } else if (/\s/u.test(command)) {
     return false;
   }

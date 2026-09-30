@@ -272,8 +272,11 @@ test('only a deliberate connection permits credential-manager interaction', () =
   assert.equal(isSupportedCredentialHelper('manager'), true);
   assert.equal(isSupportedCredentialHelper('manager-core'), true);
   assert.equal(isSupportedCredentialHelper("!'/Applications/GitHub Desktop.app/Contents/git-credential-manager'"), true);
+  assert.equal(isSupportedCredentialHelper('/Applications/GitHub\\ Desktop.app/Contents/Resources/app/git/libexec/git-core/git-credential-manager'), true);
   assert.equal(isSupportedCredentialHelper('/usr/local/bin/git-credential-manager'), true);
   assert.equal(isSupportedCredentialHelper('git-credential-manager'), false);
+  assert.equal(isSupportedCredentialHelper('/Applications/GitHub Desktop.app/Contents/git-credential-manager'), false);
+  assert.equal(isSupportedCredentialHelper('/Applications/GitHub\\ Desktop.app/Contents/git-credential-manager\\;rm'), false);
   assert.equal(isSupportedCredentialHelper('!echo unsafe; git-credential-manager'), false);
   assert.equal(isSupportedCredentialHelper("!'/Applications/GitHub Desktop.app/Contents/git-credential-manager' --extra"), false);
   assert.equal(isSupportedCredentialHelper('helper-that-mentions-git-credential-manager'), false);

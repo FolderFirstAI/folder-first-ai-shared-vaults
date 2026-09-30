@@ -7,6 +7,11 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 - Prepare the standalone public repository, license, release checks and Community-directory submission.
 - Complete current Mac/Windows behavior and plugin-update qualification.
 
+## 0.0.9 — 2026-09-30
+
+- Accept the safe shell-escaped absolute Git Credential Manager path written by GitHub Desktop on macOS.
+- Add a regression test for that exact native configuration while continuing to reject unescaped whitespace, unexpected escapes and shell syntax.
+
 ## 0.0.8 — 2026-09-30
 
 - Add the official Obsidian ESLint rules to local and hosted validation; resolve every reported source error and warning.

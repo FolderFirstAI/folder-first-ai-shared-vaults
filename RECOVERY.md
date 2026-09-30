@@ -51,6 +51,17 @@ The plugin deliberately has no “discard everything” button. Restore is limit
 
 The plugin uses the computer's normal Git Credential Manager (GCM) for secure browser sign-in. The plugin does not install it, and an employee must never paste a password, recovery code or GitHub token into Obsidian.
 
+### macOS setup
+
+An implementation specialist can prepare one Mac at a time:
+
+1. Confirm that system Git works with `git --version` and that Git Credential Manager is approved for the Mac.
+2. Install GCM using its official macOS package or the official Homebrew cask. Both supported installers configure GCM for the current user. If the organization already approves GitHub Desktop, its bundled GCM is also supported after GitHub Desktop's **Use Git Credential Manager** option or its normal GCM configuration has updated the user's Git configuration. Do not copy a private application path from another Mac.
+3. Reopen Obsidian, select **Connect vaults**, and let the employee complete their own GitHub browser sign-in.
+4. Confirm the expected Company/Team folders appear. Record only that success, application versions and the account name—never passwords, codes or token values.
+
+Official references: [GCM installation instructions](https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/install.md), [credential-store reference](https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/credstores.md) and [GitHub Desktop's GCM setting](https://github.com/desktop/desktop/blob/development/docs/integrations/bitbucket.md).
+
 ### Small business / individual setup
 
 An implementation specialist can prepare one computer at a time:
