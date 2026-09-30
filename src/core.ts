@@ -307,7 +307,7 @@ async function requireWorkspace(workspaceInput: string): Promise<{ workspace: st
     const markerPath = join(workspace, marker);
     const info = await lstatIfPresent(markerPath);
     if (!info?.isFile() || info.isSymbolicLink()) {
-      throw new DeliveryError('invalid-workspace', 'This folder is not a recognized Practical AI OS workspace.');
+      throw new DeliveryError('invalid-workspace', 'This folder is not a recognized Folder First AI Workspace.');
     }
   }
   const shared = join(workspace, 'Shared');
@@ -532,7 +532,7 @@ async function runGit(arguments_: string[], options: GitOptions): Promise<string
 }
 
 async function createRuntime(shared: string): Promise<{ scratch: string; hooks: string; attributes: string }> {
-  const scratch = join(shared, '.practical-ai-os-delivery');
+  const scratch = join(shared, '.folder-first-ai-delivery');
   const info = await lstatIfPresent(scratch);
   if (info?.isSymbolicLink() || (info && !info.isDirectory())) {
     throw new DeliveryError('unsafe-path', 'The plugin runtime folder is unsafe.');

@@ -26,4 +26,4 @@ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
-The project uses the public build layout documented by the official [Obsidian sample plugin](https://github.com/obsidianmd/obsidian-sample-plugin), which is licensed 0BSD. No source code was copied from that sample or from the older private Practical AI OS plugin.
+The project uses the public build layout documented by the official [Obsidian sample plugin](https://github.com/obsidianmd/obsidian-sample-plugin), which is licensed 0BSD. No source code was copied from that sample or from an older private product plugin.

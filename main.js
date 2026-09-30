@@ -7569,7 +7569,7 @@ async function requireWorkspace(workspaceInput) {
     const markerPath = (0, import_node_path.join)(workspace, marker);
     const info = await lstatIfPresent(markerPath);
     if (!info?.isFile() || info.isSymbolicLink()) {
-      throw new DeliveryError("invalid-workspace", "This folder is not a recognized Practical AI OS workspace.");
+      throw new DeliveryError("invalid-workspace", "This folder is not a recognized Folder First AI Workspace.");
     }
   }
   const shared = (0, import_node_path.join)(workspace, "Shared");
@@ -7763,7 +7763,7 @@ async function runGit(arguments_, options) {
   });
 }
 async function createRuntime(shared) {
-  const scratch = (0, import_node_path.join)(shared, ".practical-ai-os-delivery");
+  const scratch = (0, import_node_path.join)(shared, ".folder-first-ai-delivery");
   const info = await lstatIfPresent(scratch);
   if (info?.isSymbolicLink() || info && !info.isDirectory()) {
     throw new DeliveryError("unsafe-path", "The plugin runtime folder is unsafe.");
@@ -8294,7 +8294,7 @@ function recoveryGuidance(errorCode) {
 }
 
 // src/main.ts
-var VIEW_TYPE = "practical-ai-os-shared-vaults";
+var VIEW_TYPE = "folder-first-ai-shared-vaults";
 function shortCommit(commit) {
   return commit?.slice(0, 8) ?? "";
 }
@@ -8321,7 +8321,7 @@ var RestoreSharedVaultModal = class extends import_obsidian.Modal {
     this.contentEl.createEl("p", {
       text: "Copy anything useful to My Work/Inbox or My Work/Proposals first. After restoring, select Refresh all to check GitHub for newer approved files."
     });
-    new import_obsidian.Setting(this.contentEl).addButton((button) => button.setButtonText("Cancel").onClick(() => this.close())).addButton((button) => button.setWarning().setButtonText(`Restore ${this.vaultName}`).onClick(() => {
+    new import_obsidian.Setting(this.contentEl).addButton((button) => button.setButtonText("Cancel").onClick(() => this.close())).addButton((button) => button.setDestructive().setCta().setButtonText(`Restore ${this.vaultName}`).onClick(() => {
       this.close();
       this.onConfirm();
     }));
@@ -8368,14 +8368,14 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
     const root = this.containerEl.children[1];
     if (!(root instanceof HTMLElement)) return;
     root.empty();
-    root.addClass("practical-ai-os-shared-vaults");
+    root.addClass("folder-first-ai-shared-vaults");
     root.createEl("h2", { text: "Shared vaults" });
     root.createEl("p", {
-      cls: "practical-ai-os-shared-vaults__attention",
+      cls: "folder-first-ai-shared-vaults__attention",
       text: error instanceof Error ? error.message : "The workspace configuration could not be read."
     });
     root.createEl("p", {
-      cls: "practical-ai-os-shared-vaults__detail",
+      cls: "folder-first-ai-shared-vaults__detail",
       text: "No shared files were changed. Ask your implementation specialist or IT team for help."
     });
   }
@@ -8383,16 +8383,16 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
     const root = this.containerEl.children[1];
     if (!(root instanceof HTMLElement)) return;
     root.empty();
-    root.addClass("practical-ai-os-shared-vaults");
+    root.addClass("folder-first-ai-shared-vaults");
     root.createEl("h2", { text: "Shared vaults" });
     root.createEl("p", {
       text: "Connect and refresh the approved Company and Team files prepared for this workspace."
     });
     root.createEl("p", {
-      cls: "practical-ai-os-shared-vaults__detail",
+      cls: "folder-first-ai-shared-vaults__detail",
       text: "Connect can open your approved GitHub browser sign-in when needed. It never asks for a password or token. Your implementation specialist or IT team configures the approved secure sign-in method."
     });
-    const actions = root.createDiv({ cls: "practical-ai-os-shared-vaults__actions" });
+    const actions = root.createDiv({ cls: "folder-first-ai-shared-vaults__actions" });
     const connect = actions.createEl("button", { text: "Connect vaults" });
     const refresh = actions.createEl("button", { text: "Refresh all", cls: "mod-cta" });
     connect.disabled = this.busy;
@@ -8404,11 +8404,11 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
       void this.run("refresh");
     });
     if (this.busy) root.createEl("p", { text: "Checking shared vaults\u2026" });
-    const panel = root.createDiv({ cls: "practical-ai-os-shared-vaults__status" });
+    const panel = root.createDiv({ cls: "folder-first-ai-shared-vaults__status" });
     if (this.report) {
       for (const result of this.report.sharedVaults) this.renderResult(panel, result);
       panel.createEl("p", {
-        cls: "practical-ai-os-shared-vaults__detail",
+        cls: "folder-first-ai-shared-vaults__detail",
         text: `Checked ${new Date(this.report.checkedAt).toLocaleString()}.`
       });
     } else {
@@ -8416,33 +8416,33 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
     }
   }
   renderStatus(parent, status) {
-    const row = parent.createDiv({ cls: "practical-ai-os-shared-vaults__row" });
+    const row = parent.createDiv({ cls: "folder-first-ai-shared-vaults__row" });
     row.createEl("strong", { text: `${status.name} \u2014 ${status.state.replace("-", " ")}` });
     row.createDiv({
-      cls: status.state === "needs-attention" ? "practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention" : "practical-ai-os-shared-vaults__detail",
+      cls: status.state === "needs-attention" ? "folder-first-ai-shared-vaults__detail folder-first-ai-shared-vaults__attention" : "folder-first-ai-shared-vaults__detail",
       text: `${status.localPath}: ${status.message}${status.commit ? ` (${shortCommit(status.commit)})` : ""}`
     });
     const recovery = recoveryGuidance(status.errorCode);
-    if (recovery) row.createDiv({ cls: "practical-ai-os-shared-vaults__detail", text: recovery });
+    if (recovery) row.createDiv({ cls: "folder-first-ai-shared-vaults__detail", text: recovery });
     if (status.errorCode === "local-changes") this.renderRestoreButton(row, status);
     const saved = this.plugin.lastState(status.localPath);
     if (saved) {
       const success = saved.lastSuccessfulAt ? ` Last successful check: ${new Date(saved.lastSuccessfulAt).toLocaleString()}${saved.commit ? ` at ${shortCommit(saved.commit)}` : ""}.` : " No successful remote check is recorded yet.";
       row.createDiv({
-        cls: "practical-ai-os-shared-vaults__detail",
+        cls: "folder-first-ai-shared-vaults__detail",
         text: `Last attempt: ${new Date(saved.lastAttemptAt).toLocaleString()} (${saved.lastAction}).${success}`
       });
     }
   }
   renderResult(parent, result) {
-    const row = parent.createDiv({ cls: "practical-ai-os-shared-vaults__row" });
+    const row = parent.createDiv({ cls: "folder-first-ai-shared-vaults__row" });
     row.createEl("strong", { text: `${result.name} \u2014 ${result.action.replace("-", " ")}` });
     row.createDiv({
-      cls: result.action === "failed" ? "practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention" : "practical-ai-os-shared-vaults__detail",
+      cls: result.action === "failed" ? "folder-first-ai-shared-vaults__detail folder-first-ai-shared-vaults__attention" : "folder-first-ai-shared-vaults__detail",
       text: `${result.localPath}: ${resultSummary(result)}`
     });
     const recovery = recoveryGuidance(result.errorCode);
-    if (recovery) row.createDiv({ cls: "practical-ai-os-shared-vaults__detail", text: recovery });
+    if (recovery) row.createDiv({ cls: "folder-first-ai-shared-vaults__detail", text: recovery });
     if (result.errorCode === "local-changes") {
       this.renderRestoreButton(row, { role: result.role, name: result.name, localPath: result.localPath, state: "needs-attention", errorCode: result.errorCode, message: result.message });
     }

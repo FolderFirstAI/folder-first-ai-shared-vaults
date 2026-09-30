@@ -20,7 +20,7 @@ import {
 import { OperationGate } from './operation-gate';
 import { recoveryGuidance } from './recovery';
 
-const VIEW_TYPE = 'practical-ai-os-shared-vaults';
+const VIEW_TYPE = 'folder-first-ai-shared-vaults';
 
 interface SavedSharedVaultState {
   lastAttemptAt: string;
@@ -68,7 +68,8 @@ class RestoreSharedVaultModal extends Modal {
     new Setting(this.contentEl)
       .addButton((button) => button.setButtonText('Cancel').onClick(() => this.close()))
       .addButton((button) => button
-        .setWarning()
+        .setDestructive()
+        .setCta()
         .setButtonText(`Restore ${this.vaultName}`)
         .onClick(() => {
           this.close();
@@ -126,14 +127,14 @@ class SharedVaultsView extends ItemView {
     const root = this.containerEl.children[1];
     if (!(root instanceof HTMLElement)) return;
     root.empty();
-    root.addClass('practical-ai-os-shared-vaults');
+    root.addClass('folder-first-ai-shared-vaults');
     root.createEl('h2', { text: 'Shared vaults' });
     root.createEl('p', {
-      cls: 'practical-ai-os-shared-vaults__attention',
+      cls: 'folder-first-ai-shared-vaults__attention',
       text: error instanceof Error ? error.message : 'The workspace configuration could not be read.',
     });
     root.createEl('p', {
-      cls: 'practical-ai-os-shared-vaults__detail',
+      cls: 'folder-first-ai-shared-vaults__detail',
       text: 'No shared files were changed. Ask your implementation specialist or IT team for help.',
     });
   }
@@ -142,17 +143,17 @@ class SharedVaultsView extends ItemView {
     const root = this.containerEl.children[1];
     if (!(root instanceof HTMLElement)) return;
     root.empty();
-    root.addClass('practical-ai-os-shared-vaults');
+    root.addClass('folder-first-ai-shared-vaults');
     root.createEl('h2', { text: 'Shared vaults' });
     root.createEl('p', {
       text: 'Connect and refresh the approved Company and Team files prepared for this workspace.',
     });
     root.createEl('p', {
-      cls: 'practical-ai-os-shared-vaults__detail',
+      cls: 'folder-first-ai-shared-vaults__detail',
       text: 'Connect can open your approved GitHub browser sign-in when needed. It never asks for a password or token. Your implementation specialist or IT team configures the approved secure sign-in method.',
     });
 
-    const actions = root.createDiv({ cls: 'practical-ai-os-shared-vaults__actions' });
+    const actions = root.createDiv({ cls: 'folder-first-ai-shared-vaults__actions' });
     const connect = actions.createEl('button', { text: 'Connect vaults' });
     const refresh = actions.createEl('button', { text: 'Refresh all', cls: 'mod-cta' });
     connect.disabled = this.busy;
@@ -161,11 +162,11 @@ class SharedVaultsView extends ItemView {
     refresh.addEventListener('click', () => { void this.run('refresh'); });
 
     if (this.busy) root.createEl('p', { text: 'Checking shared vaults…' });
-    const panel = root.createDiv({ cls: 'practical-ai-os-shared-vaults__status' });
+    const panel = root.createDiv({ cls: 'folder-first-ai-shared-vaults__status' });
     if (this.report) {
       for (const result of this.report.sharedVaults) this.renderResult(panel, result);
       panel.createEl('p', {
-        cls: 'practical-ai-os-shared-vaults__detail',
+        cls: 'folder-first-ai-shared-vaults__detail',
         text: `Checked ${new Date(this.report.checkedAt).toLocaleString()}.`,
       });
     } else {
@@ -174,16 +175,16 @@ class SharedVaultsView extends ItemView {
   }
 
   private renderStatus(parent: HTMLElement, status: LocalSharedVaultStatus): void {
-    const row = parent.createDiv({ cls: 'practical-ai-os-shared-vaults__row' });
+    const row = parent.createDiv({ cls: 'folder-first-ai-shared-vaults__row' });
     row.createEl('strong', { text: `${status.name} — ${status.state.replace('-', ' ')}` });
     row.createDiv({
       cls: status.state === 'needs-attention'
-        ? 'practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention'
-        : 'practical-ai-os-shared-vaults__detail',
+        ? 'folder-first-ai-shared-vaults__detail folder-first-ai-shared-vaults__attention'
+        : 'folder-first-ai-shared-vaults__detail',
       text: `${status.localPath}: ${status.message}${status.commit ? ` (${shortCommit(status.commit)})` : ''}`,
     });
     const recovery = recoveryGuidance(status.errorCode);
-    if (recovery) row.createDiv({ cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
+    if (recovery) row.createDiv({ cls: 'folder-first-ai-shared-vaults__detail', text: recovery });
     if (status.errorCode === 'local-changes') this.renderRestoreButton(row, status);
     const saved = this.plugin.lastState(status.localPath);
     if (saved) {
@@ -191,23 +192,23 @@ class SharedVaultsView extends ItemView {
         ? ` Last successful check: ${new Date(saved.lastSuccessfulAt).toLocaleString()}${saved.commit ? ` at ${shortCommit(saved.commit)}` : ''}.`
         : ' No successful remote check is recorded yet.';
       row.createDiv({
-        cls: 'practical-ai-os-shared-vaults__detail',
+        cls: 'folder-first-ai-shared-vaults__detail',
         text: `Last attempt: ${new Date(saved.lastAttemptAt).toLocaleString()} (${saved.lastAction}).${success}`,
       });
     }
   }
 
   private renderResult(parent: HTMLElement, result: SharedVaultResult): void {
-    const row = parent.createDiv({ cls: 'practical-ai-os-shared-vaults__row' });
+    const row = parent.createDiv({ cls: 'folder-first-ai-shared-vaults__row' });
     row.createEl('strong', { text: `${result.name} — ${result.action.replace('-', ' ')}` });
     row.createDiv({
       cls: result.action === 'failed'
-        ? 'practical-ai-os-shared-vaults__detail practical-ai-os-shared-vaults__attention'
-        : 'practical-ai-os-shared-vaults__detail',
+        ? 'folder-first-ai-shared-vaults__detail folder-first-ai-shared-vaults__attention'
+        : 'folder-first-ai-shared-vaults__detail',
       text: `${result.localPath}: ${resultSummary(result)}`,
     });
     const recovery = recoveryGuidance(result.errorCode);
-    if (recovery) row.createDiv({ cls: 'practical-ai-os-shared-vaults__detail', text: recovery });
+    if (recovery) row.createDiv({ cls: 'folder-first-ai-shared-vaults__detail', text: recovery });
     if (result.errorCode === 'local-changes') {
       this.renderRestoreButton(row, { role: result.role, name: result.name, localPath: result.localPath, state: 'needs-attention', errorCode: result.errorCode, message: result.message });
     }

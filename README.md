@@ -1,12 +1,12 @@
-# Practical AI OS Shared Vaults
+# Folder First AI Shared Vaults
 
-Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Practical AI OS workspace.
+Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Folder First AI Workspace.
 
 The current source is a **pre-release candidate**. It is not yet available in Obsidian’s Community Plugins directory.
 
 ## What employees do
 
-1. Open the prepared Practical AI OS workspace in Obsidian.
+1. Open the prepared Folder First AI Workspace in Obsidian.
 2. Open **Shared Vaults**.
 3. Select **Connect vaults** and complete GitHub’s browser sign-in if asked.
 4. Select **Refresh all** when they want to check for approved Company or Team updates.
@@ -17,7 +17,7 @@ The implementation specialist prepares `Shared/VAULTS.yaml`. Employees do not en
 ## Requirements
 
 - Obsidian desktop on macOS or Windows. Mobile is not supported.
-- A recognized Practical AI OS workspace.
+- A recognized Folder First AI Workspace.
 - System Git and Git Credential Manager installed and configured by the employee, implementation specialist or IT team. On macOS, use GCM's official package/Homebrew installation or an already approved GitHub Desktop GCM configuration; on Windows, use the normal Git for Windows installation.
 - A GitHub account with access to every repository assigned in `Shared/VAULTS.yaml`.
 - Network and browser authentication access permitted by the organization.
@@ -36,7 +36,7 @@ Shared Vaults:
 - keeps existing local files when a refresh cannot reach GitHub or access is unavailable;
 - refuses local commits, divergent history, symlinks, submodules, incompatible paths and repository-controlled checkout-filter/LFS configuration;
 - refuses receiving repositories above 25,000 files, any single file above 100 MiB, or more than 1 GiB of directly versioned files;
-- collects no telemetry and has no Practical AI OS server or account.
+- collects no telemetry and has no Folder First AI server or account.
 
 **Restore approved copy** is intentionally narrow. After confirmation, it removes uncommitted tracked and untracked non-ignored changes only inside one validated shared-vault receiving clone. It refuses local commits or divergent history. It does not update from GitHub; the employee selects **Refresh all** separately.
 
@@ -46,7 +46,7 @@ Removing someone’s GitHub access prevents later authenticated checks but canno
 
 ## Network and system access disclosure
 
-The plugin invokes the computer’s system Git executable. Git connects to the `https://github.com/<owner>/<repository>` URLs prepared in `Shared/VAULTS.yaml` and uses the computer’s configured Git Credential Manager/browser flow. The plugin reads its current Obsidian vault and writes only the configured receiving paths plus its private runtime folder under `Shared/.practical-ai-os-delivery`.
+The plugin invokes the computer’s system Git executable. Git connects to the `https://github.com/<owner>/<repository>` URLs prepared in `Shared/VAULTS.yaml` and uses the computer’s configured Git Credential Manager/browser flow. The plugin reads its current Obsidian vault and writes only the configured receiving paths plus its private runtime folder under `Shared/.folder-first-ai-delivery`.
 
 Like all Obsidian Community plugins, it inherits Obsidian’s desktop permissions. Organizations should review the source and release hashes before approving it for sensitive workspaces.
 
@@ -54,7 +54,7 @@ Like all Obsidian Community plugins, it inherits Obsidian’s desktop permission
 
 After the first Community-directory version is accepted, Obsidian will obtain compatible plugin updates from this repository’s GitHub releases. The plugin never updates itself. Managed organizations may pin a reviewed version through their normal software change process.
 
-A plugin update changes plugin software only. It must preserve `Shared/VAULTS.yaml`, downloaded shared vaults, plugin state and `My Work`. Practical AI OS workspace-file upgrades are separate release-specific changes.
+A plugin update changes plugin software only. It must preserve `Shared/VAULTS.yaml`, downloaded shared vaults, plugin state and `My Work`. Folder First AI Workspace file upgrades are separate release-specific changes.
 
 ## Development
 

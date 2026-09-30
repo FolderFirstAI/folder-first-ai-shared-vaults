@@ -1,10 +1,10 @@
 {
-  "id": "practical-ai-os-shared-vaults",
-  "name": "Practical AI OS Shared Vaults",
-  "version": "0.0.11",
+  "id": "folder-first-ai-shared-vaults",
+  "name": "Folder First AI Shared Vaults",
+  "version": "0.0.12",
   "minAppVersion": "1.13.7",
   "description": "Connect and safely refresh approved Company and Team shared vaults from GitHub.",
-  "author": "Micah Horner",
-  "authorUrl": "https://practicalaios.com",
+  "author": "Folder First AI",
+  "authorUrl": "https://github.com/FolderFirstAI",
   "isDesktopOnly": true
 }

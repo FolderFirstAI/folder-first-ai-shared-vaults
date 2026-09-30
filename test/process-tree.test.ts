@@ -37,7 +37,7 @@ async function waitForClose(child: ChildProcess): Promise<void> {
 }
 
 test('termination stops a spawned process and its descendant', async (t) => {
-  const root = mkdtempSync(join(tmpdir(), 'practical-ai-os-process-tree-'));
+  const root = mkdtempSync(join(tmpdir(), 'folder-first-ai-process-tree-'));
   const childPidFile = join(root, 'descendant.pid');
   const parentScript = join(root, 'parent.cjs');
   writeFileSync(parentScript, [

@@ -1,6 +1,6 @@
 # Contributing
 
-Shared Vaults has one narrow job: receive approved Company and Team GitHub repositories into prepared Practical AI OS workspace folders without changing personal work or writing to GitHub.
+Shared Vaults has one narrow job: receive approved Company and Team GitHub repositories into prepared Folder First AI Workspace folders without changing personal work or writing to GitHub.
 
 Before proposing a change:
 

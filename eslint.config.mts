@@ -39,7 +39,7 @@ export default defineConfig(
             "My Work",
             "My Work/Inbox",
             "My Work/Proposals",
-            "Practical AI OS",
+            "Folder First AI",
             "Refresh all",
             "Team",
           ],

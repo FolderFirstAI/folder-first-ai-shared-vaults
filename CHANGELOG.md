@@ -7,6 +7,13 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 - Prepare the standalone public repository, license, release checks and Community-directory submission.
 - Complete current Mac/Windows behavior and plugin-update qualification.
 
+## 0.0.12 — 2026-09-30
+
+- Adopt the Folder First AI Shared Vaults identity before Community-directory publication.
+- Preserve the bordered status panel and per-vault dividers under the final CSS selectors.
+- Make the confirmed Restore action visually destructive while retaining its existing confirmation and safety checks.
+- Keep system Git and Git Credential Manager as the only selected GitHub transport; no GitHub App, direct API, SecretStorage or plugin-managed token code is included.
+
 ## 0.0.11 — 2026-09-30
 
 - Stop the active Git command and its helper processes when the Shared Vaults view closes, the plugin is disabled, output exceeds its safe limit or the operation times out.
