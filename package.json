@@ -1,6 +1,6 @@
 {
   "name": "practical-ai-os-shared-vaults",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": true,
   "description": "Connect and safely refresh approved Company and Team shared vaults from GitHub.",
   "type": "module",

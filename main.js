@@ -8467,16 +8467,17 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
       new import_obsidian.Notice("A shared-vault check is already in progress.");
       return;
     }
+    let reloadAfterRestore = false;
     try {
       this.report = await restoreSharedVault(this.plugin.workspacePath(), status.localPath, { signal: controller.signal });
       await this.plugin.remember(this.report);
       const result = this.report.sharedVaults[0];
       if (result?.action === "restored") {
         new import_obsidian.Notice(`${status.name} was restored. Select Refresh all to check for newer approved files.`);
-        await this.reloadStatus();
-        return;
+        reloadAfterRestore = true;
+      } else {
+        new import_obsidian.Notice(`${status.name} was not restored. Review the message in Shared vaults.`);
       }
-      new import_obsidian.Notice(`${status.name} was not restored. Review the message in Shared vaults.`);
     } catch (error) {
       this.renderFatal(error);
       new import_obsidian.Notice("Shared vault was not changed. Open the view for details.");
@@ -8484,6 +8485,10 @@ var SharedVaultsView = class extends import_obsidian.ItemView {
     } finally {
       this.plugin.finishOperation(controller);
       this.busy = false;
+    }
+    if (reloadAfterRestore) {
+      await this.reloadStatus();
+      return;
     }
     this.render();
   }
