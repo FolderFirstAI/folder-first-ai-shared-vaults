@@ -193,6 +193,50 @@ test('strict enrollment accepts only prepared Company and Team destinations', ()
     ].join('\n')),
     (error: unknown) => error instanceof DeliveryError && error.code === 'invalid-config',
   );
+
+  const invalidEnrollments = [
+    '',
+    'format_version: [1]\ncompany: {}\nteams: []\n',
+    valid.replace('format_version: 1', 'format_version: 2'),
+    valid.replace('teams: []', 'teams: {}'),
+    valid.replace('  approved_branch: main', '  approved_branch: main\n  unexpected: true'),
+    valid.replace('Shared/Company', 'Shared/Teams/Company'),
+    valid.replace('Shared/Company', '.obsidian/plugins/shared'),
+    valid.replace('Shared/Company', 'Shared/../My Work/Company'),
+    valid.replace('teams: []', [
+      'teams:',
+      '  - name: Sales',
+      '    repository_url: https://github.com/example/sales.git',
+      '    local_path: Shared/Company',
+      '    approved_branch: main',
+    ].join('\n')),
+    valid.replace('teams: []', [
+      'teams:',
+      '  - name: Sales',
+      '    repository_url: https://github.com/example/sales.git',
+      '    local_path: Shared/Teams/Sales',
+      '    approved_branch: main',
+      '  - name: Duplicate path',
+      '    repository_url: https://github.com/example/operations.git',
+      '    local_path: Shared/Teams/sales',
+      '    approved_branch: main',
+    ].join('\n')),
+    [
+      'format_version: 1',
+      'company: &company',
+      '  repository_url: https://github.com/example/company.git',
+      '  local_path: Shared/Company',
+      '  approved_branch: main',
+      'teams:',
+      '  - *company',
+    ].join('\n'),
+  ];
+  for (const invalid of invalidEnrollments) {
+    assert.throws(
+      () => parseEnrollment(invalid),
+      (error: unknown) => error instanceof DeliveryError && error.code === 'invalid-config',
+    );
+  }
 });
 
 test('unrecognized workspaces and invalid approved branches stop before shared or personal writes', async (t) => {
