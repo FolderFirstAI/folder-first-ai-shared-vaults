@@ -2,7 +2,7 @@
 
 Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Folder First AI Workspace.
 
-Version `1.0.0` is the first public-release candidate. It is not yet available in Obsidian’s Community Plugins directory; controlled implementations install the reviewed release assets directly until Obsidian accepts the directory submission.
+Version `1.0.0` is the first public release. Install it from Obsidian’s Community Plugins directory or from the reviewed [GitHub release](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/releases/tag/1.0.0).
 
 ## What employees do
 
@@ -52,7 +52,7 @@ Like all Obsidian Community plugins, it inherits Obsidian’s desktop permission
 
 ## Updates
 
-After the first Community-directory version is accepted, Obsidian will obtain compatible plugin updates from this repository’s GitHub releases. The plugin never updates itself. Managed organizations may pin a reviewed version through their normal software change process.
+Obsidian obtains compatible plugin updates from this repository’s GitHub releases. The plugin never updates itself. Managed organizations may pin a reviewed version through their normal software change process.
 
 A plugin update changes plugin software only. It must preserve `Shared/VAULTS.yaml`, downloaded shared vaults, plugin state and `My Work`. Folder First AI Workspace file upgrades are separate release-specific changes.
 
@@ -68,6 +68,12 @@ npm run build
 ```
 
 The production build writes the Community-release asset `main.js` at the repository root. A valid release also attaches the matching root `manifest.json` and `styles.css` under a Git tag identical to the manifest version.
+
+GitHub [artifact attestation 52392814](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/attestations/52392814) records the exact SHA-256 identities of the three `1.0.0` release files. A downloaded file can be verified with GitHub CLI:
+
+```sh
+gh attestation verify --owner FolderFirstAI <filename>
+```
 
 ## Support and security
 
