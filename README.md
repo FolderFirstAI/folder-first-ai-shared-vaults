@@ -2,7 +2,7 @@
 
 Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Folder First AI Workspace.
 
-Version `1.0.0` is the first public release. Install it from Obsidian’s Community Plugins directory or from the reviewed [GitHub release](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/releases/tag/1.0.0).
+Version `1.0.1` is the current public release. Install it from Obsidian’s Community Plugins directory or from the reviewed [GitHub release](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/releases/tag/1.0.1).
 
 ## What employees do
 
@@ -69,7 +69,7 @@ npm run build
 
 The production build writes the Community-release asset `main.js` at the repository root. A valid release also attaches the matching root `manifest.json` and `styles.css` under a Git tag identical to the manifest version.
 
-GitHub [artifact attestation 52392814](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/attestations/52392814) records the exact SHA-256 identities of the three `1.0.0` release files. A downloaded file can be verified with GitHub CLI:
+GitHub [artifact attestations](https://github.com/FolderFirstAI/folder-first-ai-shared-vaults/attestations) record the exact SHA-256 identities of the published release files. A downloaded file can be verified with GitHub CLI:
 
 ```sh
 gh attestation verify --owner FolderFirstAI <filename>

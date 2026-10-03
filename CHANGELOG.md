@@ -6,6 +6,12 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 
 No changes yet.
 
+## 1.0.1 — 2026-10-03
+
+- Correct the public Community listing's cached pre-release wording now that the plugin is live and installable.
+- Add GitHub artifact attestation to the release process.
+- Keep the tested plugin runtime and stylesheet byte-for-byte identical to `1.0.0`.
+
 ## 1.0.0 — 2026-10-03
 
 - Publish the reviewed Git/Git Credential Manager delivery design under the stable `folder-first-ai-shared-vaults` plugin ID.
