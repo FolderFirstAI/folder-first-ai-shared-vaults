@@ -1,14 +1,14 @@
 ---
 id: folder-first-ai-shared-vaults-recovery
 type: guide
-status: release-candidate
+status: active
 created: "2026-09-29"
 updated: "2026-09-30"
-summary: "Plain-language setup and confirmed local-change recovery for the Shared Vaults release-candidate plugin."
+summary: "Plain-language setup and confirmed local-change recovery for Folder First AI Shared Vaults 1.0.0."
 ---
 # Shared Vaults: setup and recovery
 
-> **Controlled-release candidate.** This guide describes Folder First AI Shared Vaults `1.0.0`. It is not a substitute for client IT approval, backup or endpoint policy.
+This guide describes the prepared Folder First AI Shared Vaults `1.0.0` release. It is not a substitute for client IT approval, backup or endpoint policy.
 
 ## What this view does
 

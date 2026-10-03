@@ -1,11 +1,11 @@
 # Third-party notices
 
-This pre-release plugin uses the following pinned packages during development. `yaml` is bundled into the generated plugin; the Obsidian API remains an external host API. Build-only packages are not shipped as runtime plugin files.
+This plugin uses the following pinned packages during development. `yaml` is bundled into the generated plugin; the Obsidian API remains an external host API. Build-only packages are not shipped as runtime plugin files.
 
 | Package | Version | Role | License |
 |---|---:|---|---|
 | yaml | 2.9.1 | Parse the bounded enrollment file | ISC |
-| obsidian | 1.8.7 | Development API types | MIT |
+| obsidian | 1.13.1 | Development API types | MIT |
 | esbuild | 0.25.10 | Build only | MIT |
 | typescript | 5.9.2 | Build only | Apache-2.0 |
 | @types/node | 22.18.6 | Development types | MIT |
