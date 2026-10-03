@@ -7400,10 +7400,12 @@ function terminateProcessTree(child) {
 // src/core.ts
 var MAX_CONFIG_BYTES = 64 * 1024;
 var MAX_GIT_OUTPUT_BYTES = 256 * 1024;
+var MAX_TREE_OUTPUT_BYTES = 8 * 1024 * 1024;
 var GIT_TIMEOUT_MS = 12e4;
 var MAX_REPOSITORY_FILES = 25e3;
 var MAX_REPOSITORY_FILE_BYTES = 100 * 1024 * 1024;
 var MAX_REPOSITORY_TOTAL_BYTES = 1024 * 1024 * 1024;
+var MAX_REPOSITORY_PATH_BYTES = 220;
 var COMPANY_PATH = "Shared/Company";
 var TEAM_PREFIX = "Shared/Teams/";
 var SAFE_TEAM = /^[A-Za-z0-9_-]+$/;
@@ -7720,9 +7722,10 @@ async function runGit(arguments_, options) {
     let stdout = "";
     let outputBytes = 0;
     let exceeded = false;
+    const maxOutputBytes = options.maxOutputBytes ?? MAX_GIT_OUTPUT_BYTES;
     const collect = (chunk, retain) => {
       outputBytes += chunk.length;
-      if (outputBytes > MAX_GIT_OUTPUT_BYTES) {
+      if (outputBytes > maxOutputBytes) {
         exceeded = true;
         terminateProcessTree(child);
         return;
@@ -7788,7 +7791,7 @@ async function createRuntime(shared) {
 }
 function validateRepositoryPath(path) {
   const parts = path.split("/");
-  if (path.startsWith("/") || path.includes("\\") || parts.some((part) => part === "" || part === "." || part === "..")) {
+  if (Buffer.byteLength(path, "utf8") > MAX_REPOSITORY_PATH_BYTES || path.startsWith("/") || path.includes("\\") || parts.some((part) => part === "" || part === "." || part === "..")) {
     throw new DeliveryError("unsafe-repository-tree", "Repository contains an unsafe path.");
   }
   for (const part of parts) {
@@ -7850,6 +7853,7 @@ function validateTreeListing(output) {
 async function verifyTree(ref, git) {
   const output = await runGit(["ls-tree", "-r", "-z", "--full-tree", "-l", ref], {
     ...git,
+    maxOutputBytes: MAX_TREE_OUTPUT_BYTES,
     errorCode: "unsafe-repository-tree",
     errorMessage: "Repository contents could not be inspected safely."
   });

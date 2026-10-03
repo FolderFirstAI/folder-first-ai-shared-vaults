@@ -2,7 +2,7 @@
 
 Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Folder First AI Workspace.
 
-Version `1.0.0` is prepared as the first public release. Until the GitHub release is published, controlled implementations use only the exact reviewed assets supplied by Folder First AI. Obsidian Community Plugins availability is a separate review and must not be claimed until Obsidian accepts the directory submission.
+Version `1.0.0` is the first public-release candidate. It is not yet available in Obsidian’s Community Plugins directory; controlled implementations install the reviewed release assets directly until Obsidian accepts the directory submission.
 
 ## What employees do
 
@@ -35,7 +35,7 @@ Shared Vaults:
 - opens authentication only after the employee deliberately selects **Connect vaults**;
 - keeps existing local files when a refresh cannot reach GitHub or access is unavailable;
 - refuses local commits, divergent history, symlinks, submodules, incompatible paths and repository-controlled checkout-filter/LFS configuration;
-- refuses receiving repositories above 25,000 files, any single file above 100 MiB, or more than 1 GiB of directly versioned files;
+- refuses receiving repositories above 25,000 files, paths above 220 UTF-8 bytes, any single file above 100 MiB, or more than 1 GiB of directly versioned files;
 - collects no telemetry and has no Folder First AI server or account.
 
 **Restore approved copy** is intentionally narrow. After confirmation, it removes uncommitted tracked and untracked non-ignored changes only inside one validated shared-vault receiving clone. It refuses local commits or divergent history. It does not update from GitHub; the employee selects **Refresh all** separately.

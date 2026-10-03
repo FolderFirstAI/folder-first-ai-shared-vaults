@@ -28,6 +28,7 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: git diff --exit-code -- main.js
       - run: node scripts/check-release.mjs
 
   dependency-audit:

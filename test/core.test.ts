@@ -303,6 +303,30 @@ test('repository tree limits reject oversized files, oversized collections and u
     () => validateTreeListing(`040000 tree ${'b'.repeat(40)} -\tContext\0`),
     (error: unknown) => error instanceof DeliveryError && error.code === 'unsafe-repository-tree',
   );
+  assert.throws(
+    () => validateTreeListing(entry(`Context/${'a'.repeat(220)}.md`, 1)),
+    (error: unknown) => error instanceof DeliveryError && error.code === 'unsafe-repository-tree',
+  );
+  const maximum = Array.from({ length: 25_000 }, (_, index) => entry(`Context/${index}.md`, 1)).join('');
+  assert.doesNotThrow(() => validateTreeListing(maximum));
+  assert.throws(
+    () => validateTreeListing(`${maximum}${entry('Context/too-many.md', 1)}`),
+    (error: unknown) => error instanceof DeliveryError && error.code === 'unsafe-repository-tree',
+  );
+});
+
+test('tree inspection can receive more than the generic diagnostic-output limit', async (t) => {
+  const f = fixture(t);
+  for (let index = 0; index < 3_000; index += 1) {
+    write(
+      join(f.company.work, 'Context', `representative-context-file-${index.toString().padStart(4, '0')}.md`),
+      '# Context\n',
+    );
+  }
+  commitAndPush(f.company, 'Add a safely bounded large tree');
+  const report = await connectSharedVaults(f.workspace, deliveryOptions);
+  assert.equal(report.sharedVaults[0]?.action, 'connected', JSON.stringify(report, null, 2));
+  assert.equal(hashPersonal(f.workspace), f.personalHash);
 });
 
 test('Windows Git discovery permits only deduplicated standard Git-for-Windows locations', () => {

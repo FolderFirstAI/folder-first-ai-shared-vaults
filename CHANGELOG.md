@@ -9,8 +9,9 @@ No changes yet.
 ## 1.0.0 — 2026-10-03
 
 - Publish the reviewed Git/Git Credential Manager delivery design under the stable `folder-first-ai-shared-vaults` plugin ID.
-- Preserve the qualified `0.0.12` executable behavior while promoting the first public release metadata.
+- Start from the qualified `0.0.12` Git/GCM design while promoting the first public release.
 - Document installation prerequisites, deliberate Connect/Refresh, scoped Restore, lifecycle preservation, limitations and support boundaries.
+- Let bounded repository-tree inspection exceed the smaller diagnostic-output ceiling, enforce a 220-byte portable path limit, and test the documented 25,000-file boundary before publication.
 
 ## 0.0.12 — 2026-09-30
 

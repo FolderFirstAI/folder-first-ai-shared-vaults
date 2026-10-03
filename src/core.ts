@@ -18,10 +18,12 @@ import { terminateProcessTree } from './process-tree.ts';
 
 const MAX_CONFIG_BYTES = 64 * 1024;
 const MAX_GIT_OUTPUT_BYTES = 256 * 1024;
+const MAX_TREE_OUTPUT_BYTES = 8 * 1024 * 1024;
 const GIT_TIMEOUT_MS = 120_000;
 const MAX_REPOSITORY_FILES = 25_000;
 const MAX_REPOSITORY_FILE_BYTES = 100 * 1024 * 1024;
 const MAX_REPOSITORY_TOTAL_BYTES = 1024 * 1024 * 1024;
+const MAX_REPOSITORY_PATH_BYTES = 220;
 const COMPANY_PATH = 'Shared/Company';
 const TEAM_PREFIX = 'Shared/Teams/';
 const SAFE_TEAM = /^[A-Za-z0-9_-]+$/;
@@ -153,6 +155,7 @@ interface GitOptions {
   errorCode: DeliveryErrorCode;
   errorMessage: string;
   credentialInteractive: boolean;
+  maxOutputBytes?: number;
   signal?: AbortSignal;
 }
 
@@ -494,9 +497,10 @@ async function runGit(arguments_: string[], options: GitOptions): Promise<string
     let stdout = '';
     let outputBytes = 0;
     let exceeded = false;
+    const maxOutputBytes = options.maxOutputBytes ?? MAX_GIT_OUTPUT_BYTES;
     const collect = (chunk: Buffer, retain: boolean): void => {
       outputBytes += chunk.length;
-      if (outputBytes > MAX_GIT_OUTPUT_BYTES) {
+      if (outputBytes > maxOutputBytes) {
         exceeded = true;
         terminateProcessTree(child);
         return;
@@ -558,7 +562,9 @@ async function createRuntime(shared: string): Promise<{ scratch: string; hooks: 
 
 function validateRepositoryPath(path: string): void {
   const parts = path.split('/');
-  if (path.startsWith('/') || path.includes('\\') || parts.some((part) => part === '' || part === '.' || part === '..')) {
+  if (Buffer.byteLength(path, 'utf8') > MAX_REPOSITORY_PATH_BYTES
+      || path.startsWith('/') || path.includes('\\')
+      || parts.some((part) => part === '' || part === '.' || part === '..')) {
     throw new DeliveryError('unsafe-repository-tree', 'Repository contains an unsafe path.');
   }
   for (const part of parts) {
@@ -622,6 +628,7 @@ export function validateTreeListing(output: string): void {
 async function verifyTree(ref: string, git: GitOptions): Promise<void> {
   const output = await runGit(['ls-tree', '-r', '-z', '--full-tree', '-l', ref], {
     ...git,
+    maxOutputBytes: MAX_TREE_OUTPUT_BYTES,
     errorCode: 'unsafe-repository-tree',
     errorMessage: 'Repository contents could not be inspected safely.',
   });
