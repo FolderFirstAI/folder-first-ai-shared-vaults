@@ -2,7 +2,7 @@
 
 Shared Vaults is a desktop-only Obsidian plugin that places an employee’s approved Company and Team GitHub repositories in prepared folders inside a Folder First AI Workspace.
 
-The current source is a **pre-release candidate**. It is not yet available in Obsidian’s Community Plugins directory.
+Version `1.0.0` is the first public-release candidate. It is not yet available in Obsidian’s Community Plugins directory; controlled implementations install the reviewed release assets directly until Obsidian accepts the directory submission.
 
 ## What employees do
 

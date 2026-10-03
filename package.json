@@ -1,6 +1,6 @@
 {
   "name": "folder-first-ai-shared-vaults",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "private": true,
   "description": "Connect and safely refresh approved Company and Team shared vaults from GitHub.",
   "type": "module",
