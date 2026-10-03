@@ -8,7 +8,7 @@ summary: "Plain-language setup and confirmed local-change recovery for the Share
 ---
 # Shared Vaults: setup and recovery
 
-> **Pre-release source only.** This guide describes Folder First AI Shared Vaults `0.0.12`. It is not yet production-approved or a substitute for client IT approval.
+> **Controlled-release candidate.** This guide describes Folder First AI Shared Vaults `1.0.0`. It is not a substitute for client IT approval, backup or endpoint policy.
 
 ## What this view does
 

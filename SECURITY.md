@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-No public production version exists yet. After `1.0.0`, the latest supported release receives security fixes. Managed customers should follow their approved version and update policy.
+Version `1.0.0` is the first public-release candidate. After publication, the latest supported release receives security fixes. Managed customers should follow their approved version and update policy.
 
 ## Report a vulnerability
 

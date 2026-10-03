@@ -4,8 +4,13 @@ All notable changes use semantic versioning. Internal `0.0.x` versions are relea
 
 ## Unreleased
 
-- Prepare the standalone public repository, license, release checks and Community-directory submission.
-- Complete current Mac/Windows behavior and plugin-update qualification.
+No changes yet.
+
+## 1.0.0 — 2026-10-03
+
+- Publish the reviewed Git/Git Credential Manager delivery design under the stable `folder-first-ai-shared-vaults` plugin ID.
+- Preserve the qualified `0.0.12` executable behavior while promoting the first public release metadata.
+- Document installation prerequisites, deliberate Connect/Refresh, scoped Restore, lifecycle preservation, limitations and support boundaries.
 
 ## 0.0.12 — 2026-09-30
 

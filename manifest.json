@@ -1,7 +1,7 @@
 {
   "id": "folder-first-ai-shared-vaults",
   "name": "Folder First AI Shared Vaults",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "minAppVersion": "1.13.7",
   "description": "Connect and safely refresh approved Company and Team shared vaults from GitHub.",
   "author": "Folder First AI",
