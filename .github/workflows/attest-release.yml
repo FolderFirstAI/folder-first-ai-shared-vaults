@@ -1,0 +1,47 @@
+name: Attest release assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact existing release tag to rebuild and attest
+        required: true
+        default: '1.0.0'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the exact release tag
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ inputs.version }}
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.6.0'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Rebuild the release bundle
+        run: npm run build
+      - name: Verify the rebuilt bundle and release structure
+        run: |
+          git diff --exit-code -- main.js
+          node scripts/check-release.mjs
+      - name: Attest exact release files
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
